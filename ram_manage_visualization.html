@@ -2,29 +2,34 @@
 <html>
 <head>
 
-    <meta charset="UTF-8">
-    <title>动态分区存储管理</title>
+	<meta charset="UTF-8">
+	<title>动态分区存储管理</title>
 
-    <script src="./js/jquery.min.js">
-    </script>
-    <script src="./js/bootstrap.min.js">
-    </script>
+	<script src="./js/jquery.min.js">
+	</script>
+	<script src="./js/bootstrap.min.js">
+	</script>
 
-    <link href="./js/bootstrap.min.css" rel="stylesheet" type="text/css">
-    <style>
-    .1 {
-      text-align:center;
-      width: 70px;
-    }
+	<link href="./js/bootstrap.min.css" rel="stylesheet" type="text/css">
+	<style>
+	.1 {
+	  text-align:center;
+	  width: 70px;
+	}
 
-    </style>
+	</style>
 
-    <script>
+	<script>
 
 function debug(x){  //debug
   var div = document.getElementById('debug');
   div.innerHTML = x+'<br><br>'+div.innerHTML
 
+}
+function message(x,type){ // type:success  info 	warning  danger
+	var div=$('#message')
+	var msg='<div class="alert alert-'+  type +' alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true"> &times;   </button>   '+ x +'</div>'
+	div.prepend($(msg))
 }
 
 function rander () {  //渲染函数
@@ -33,38 +38,38 @@ function rander () {  //渲染函数
   $("#1-table tr:gt(0)").remove();
   var index=0
   window.ram.forEach(function(e) {
-    var size=e.size
-    var begin=e.begin
+	var size=e.size
+	var begin=e.begin
 
-    var height=size/maxSize*HEIGHT
-    var top=begin/maxSize*HEIGHT
+	var height=size/maxSize*HEIGHT
+	var top=begin/maxSize*HEIGHT
 
-    var id=index
-    index+=1
+	var id=index
+	index+=1
 
-    var color=COLOR0
-    var name='空闲'
-    if(e.type==1){
-      color=COLOR1
-      name=e.name
-    }
+	var color=COLOR0
+	var name='空闲'
+	if(e.type==1){
+	  color=COLOR1
+	  name=e.name
+	}
 
-    var div='<div onclick="javascript:ramRemove('+ id +')" id="'+ id +'" class="'+ e.type +'" style="text-align:center;width: 70px;top:'+ top +'px;height:'+ height +'px;background-color:'+ color +';">'+ name +'</div>'
-    $('#ram').append($(div))
-    
+	var div='<div onclick="javascript:ramRemove('+ id +')" id="'+ id +'" class="'+ e.type +'" style="text-align:center;width: 70px;top:'+ top +'px;height:'+ height +'px;background-color:'+ color +';">'+ name +'</div>'
+	$('#ram').append($(div))
+	
 
-    // debug(ram) <tr> <th>起址</th> <th>长度</th> <th>状态</th> </tr>
-    var tr=$('#0-table')
-    var three='未分配'
-    if(e.type==1){
-      tr=$('#1-table')
-      three=e.name
-    }
-    div = '<tr> <th>'+ begin +'</th> <th>'+ size +'</th> <th>'+ three +'</th> </tr>'
-    tr.append($(div))
+	// debug(ram) <tr> <th>起址</th> <th>长度</th> <th>状态</th> </tr>
+	var tr=$('#0-table')
+	var three='未分配'
+	if(e.type==1){
+	  tr=$('#1-table')
+	  three=e.name
+	}
+	div = '<tr> <th>'+ begin +'</th> <th>'+ size +'</th> <th>'+ three +'</th> </tr>'
+	tr.append($(div))
 
 
-    }
+	}
   )
   $('#ram').append($('<div><h5 style="color:black">内存分布示意图</h5></div>'))
 }
@@ -73,17 +78,17 @@ function rander () {  //渲染函数
 function distribute(name, size, empty){  //分配内存 name:任务名称 | size:大小 | empty:第几块内存
   var empObj=ram[empty]
   if(size==empObj.size){
-    empObj.type=1;
-    empObj.name=name;
+	empObj.type=1;
+	empObj.name=name;
   }else{
 
-    ram.splice(empty, 0, 
-      {'type':1,'begin':empObj.begin,'size':size,'name':name}
-      );  //向ram中 增加任务
+	ram.splice(empty, 0, 
+	  {'type':1,'begin':empObj.begin,'size':size,'name':name}
+	  );  //向ram中 增加任务
 
-    empObj.begin+=size;
-    empObj.size-=size;
-     //更改剩余空间大小
+	empObj.begin+=size;
+	empObj.size-=size;
+	 //更改剩余空间大小
   }
   rander()  //重新渲染
 
@@ -94,12 +99,12 @@ function addButton(){  //点击“添加任务” 按钮后的处理
   var name
   var size
   if (content==''){
-    name='随机任务'
-    size=parseInt((Math.random()+0.05)*maxSize/4)  //随机测试
+	name='随机任务'
+	size=parseInt((Math.random()+0.05)*maxSize/4)  //随机测试
   }else{
-    var x=content.split(' ')
-    size=parseInt(x[x.length-1])
-    name=content.slice(0,content.lastIndexOf(size)-1).replace(/^\s*|\s*$/g,'')
+	var x=content.split(' ')
+	size=parseInt(x[x.length-1])
+	name=content.slice(0,content.lastIndexOf(size)-1).replace(/^\s*|\s*$/g,'')
   }
   add(name,size)
 }
@@ -111,33 +116,34 @@ function add(name, size){  //增加任务
   var add_state=-1  //判断是否失败
 
   if(methodState==0){  //首次适应算法
-    for (var i = 0; i < ram.length; i++) {
-      if(ram[i].type==0&&ram[i].size>=size){
-        distribute(name, size, i);
-        add_state=0;
-        break;
-      }
-    };
+	for (var i = 0; i < ram.length; i++) {
+	  if(ram[i].type==0&&ram[i].size>=size){
+		distribute(name, size, i);
+		add_state=0;
+		break;
+	  }
+	};
   }
 
   if(methodState==1){  //最优适应算法
-    var min=maxSize+1
-    var j=-1
-    for (var i = 0; i < ram.length; i++) {
-      if(ram[i].type==0&&ram[i].size>=size&&ram[i].size<min){
-        j=i;
-        min=ram[i].size;
-      }
-    };
-    if(j!=-1){
-      distribute(name, size, j);
-      add_state=1
-    }
+	var min=maxSize+1
+	var j=-1
+	for (var i = 0; i < ram.length; i++) {
+	  if(ram[i].type==0&&ram[i].size>=size&&ram[i].size<min){
+		j=i;
+		min=ram[i].size;
+	  }
+	};
+	if(j!=-1){
+	  distribute(name, size, j);
+	  add_state=1
+	}
   }
 
   if(add_state==-1){
-    //add_false() //分配失败函数
-    console.log('分配失败')
+	//add_false() //分配失败函数
+	console.log('分配失败')
+	message('无没有大于'+size+'Mb的空闲内存 分配失败!','danger')
   }
 }
 
@@ -146,20 +152,22 @@ function removeButton(){
   var content=$('#remove').val().replace(/^\s*|\s*$/g,'')
 
   if (content==''){
-    console.log("没有输入")
-    return
+	console.log("没有输入")
+	message('没有输入!','warning')
+	return
   }
   if(content.slice(0,2)=='i:'){
-    ramRemove(parseInt(content.slice(2,content.length)))
-    return
+	ramRemove(parseInt(content.slice(2,content.length)))
+	return
   }
   function nameToIndex(name){
-    for (var i = 0; i < ram.length; i++) {
-      if(ram[i].name==name){
-        return i;
-      }
-    };
-    console.log('未找到该任务')
+	for (var i = 0; i < ram.length; i++) {
+	  if(ram[i].name==name){
+		return i;
+	  }
+	};
+	console.log('未找到该任务')
+	message('未找到“'+name+'”!','warning')
   }
 
   ramRemove(nameToIndex(content))
@@ -169,17 +177,17 @@ function removeButton(){
 
 function ramRemove(i){
   function combine(l,h){
-    ram[l].size+=ram[h].size
-    ram.splice(h, 1) 
-    rander()
+	ram[l].size+=ram[h].size
+	ram.splice(h, 1) 
+	rander()
   }
   ram[i].type=0;
   ram[i].name='空闲'
   if(i+1!=ram.length&&ram[i+1].type==0){//注意先后顺序
-    combine(i,i+1)
+	combine(i,i+1)
   }
   if(i-1!=-1&&ram[i-1].type==0){
-    combine(i-1,i)
+	combine(i-1,i)
   }
 
   rander()  //重新渲染
@@ -196,7 +204,7 @@ function changeMethodState(){
   window.methodState=(window.methodState+1)%2
   var x='最先适应' // 0 最先适应  | 1 最佳适应
   if(window.methodState==1){
-    x='最佳适应' 
+	x='最佳适应' 
   }
   $("#change-button").text('切换为'+$("#state-now").text()+'算法')
   $("#state-now").text(x)
@@ -204,7 +212,7 @@ function changeMethodState(){
 }
 
 
-    </script>
+	</script>
 
 </head>
 
@@ -216,77 +224,88 @@ function changeMethodState(){
 
   </div>
   <div id="contral" style="position:fixed;top:50px;left:20%;">
-    <div id="input-div"  >
-      添加任务
-      <br>
-      <input type='text' id='add' class="form-control" placeholder="任务名 使用内存"  style="width:200px;display:inline"> 
-      <button id='add-button' class="btn btn-info" onclick="javascript:addButton()"  style="display:inline">增加任务</button> 
-      <small class="text-muted">比如"任务一  12"</small>
-      <br><br>
-      <em><p class='text-muted small'>提示：直接点击“添加任务”按钮 将添加一个随机大小的任务</p></em>
-      <hr>
+	<div id="input-div"  >
+	  添加任务
+	  <br>
+	  <input type='text' id='add' class="form-control" placeholder="任务名 使用内存"  style="width:200px;display:inline"> 
+	  <button id='add-button' class="btn btn-info" onclick="javascript:addButton()"  style="display:inline">添加任务</button> 
+	  <small class="text-muted">比如"任务一  12"</small>
+	  <br><br>
+	  <em><p class='text-muted small'>提示：直接点击“添加任务”按钮 将添加一个随机大小的任务</p></em>
+	  <hr>
 
-      回收内存<br>
-      <input type='text' id='remove'  class="form-control" placeholder="任务名"  style="width:200px;display:inline"> 
-      <button id='remove-button' class="btn btn-info" onclick="javascript:removeButton()">内存回收</button> 
-      <small class="text-muted">比如"任务一"</small>
-      <br><br>
-      <em><p class='text-muted small'>提示：在左边的示意图上点击对应的任务 任务将直接被回收</p></em>
-    </div>
-    <hr>
-    <hr>
+	  回收内存<br>
+	  <input type='text' id='remove'  class="form-control" placeholder="任务名"  style="width:200px;display:inline"> 
+	  <button id='remove-button' class="btn btn-info" onclick="javascript:removeButton()">内存回收</button> 
+	  <small class="text-muted">比如"任务一"</small>
+	  <br><br>
+	  <em><p class='text-muted small'>提示：在左边的示意图上点击对应的任务 任务将直接被回收</p></em>
+	</div>
+	<hr>
+	<hr>
 
-    <div id="table" style="overflow:view;">
-      <h4 class="text-center">空闲表</h4>
-      <table id="0-table"   class="table-striped" width="400">
-        <tr> <th>起址</th> <th>长度</th> <th>状态</th> </tr>
+	<div id="table" style="height:300px;overflow:scroll;">
+	  <h4 class="text-center">空闲表</h4>
+	  <table id="0-table"   class="table-striped" width="400">
+		<tr> <th>起址</th> <th>长度</th> <th>状态</th> </tr>
 
-      </table>
-      <br>
-      <hr>
-      <h4 class="text-center">任务表 </h4>    
-      <table id="1-table"   class="table-striped" width="400">
-        <tr> <th>起址</th> <th>长度</th> <th>名字</th> </tr>
-      </table>
-    </div>
+	  </table>
+	  <br>
+	  <hr>
+	  <h4 class="text-center">任务表 </h4>    
+	  <table id="1-table"   class="table-striped" width="400">
+		<tr> <th>起址</th> <th>长度</th> <th>名字</th> </tr>
+	  </table>
+	</div>
   </div>
 
 
-  <div  class="panel panel-default" id="static-div" style="position:fixed;top:10%;left:65%;">
+  <div  class="panel panel-default" id="static-div" style="position:fixed;top:10%;left:65%;width: 250px">
    <div class="panel-heading">
-      <h4>系统状态</h4>
+	  <h5>系统状态</h5>
    </div>
-  
-  <dl class="dl-horizontal">
-    <dt>当前算法</dt>
-    <dd id='state-now'>
-      最佳适应
-    </dd>
-    <dt>总内存</dt>
-    <dd id='maxram-now'>100 Mb</dd>
+  <div>
+  <dl class="dl-horizontal" style="position:absolute;left:-50px" >
+	<dt>当前算法</dt>
+	<dd id='state-now'>
+	  最佳适应
+	</dd>
+	<dt>总内存</dt>
+	<dd id='maxram-now'>100 Mb</dd>
   </dl>
-    <hr style="line-height:9px" >
-    <br>
-    　重置内存大小
-    <br>
-     <div class="col-lg-6">
-        <div class="input-group">
-           <input type="text" id="reset" class="form-control">
-           <span class="input-group-btn">
-              <button class="btn btn-default btn-info" type="button" onclick="javascript:resetButton()">
-                 重置
-              </button>
-           </span>
-        </div><!-- /input-group -->
-     </div><!-- /.col-lg-6 -->
-     <br>
-     <hr>
-     <br>
-      <div class="text-center">
-        <button  id='change-button' class="btn btn-info" onclick="javascript:changeMethodState()"></button> 
-      </div>
-     <br>
-     <br>
+  <div>
+	<hr style="line-height:9px" >
+
+	<hr>
+	 <hr>
+	　重置内存大小
+	<br>
+	 <div class="col-lg-6">
+		<div class="input-group">
+		   <input type="text" id="reset" class="form-control" style="width: 140px">
+		   <span class="input-group-btn">
+			  <button class="btn btn-default btn-info" type="button" onclick="javascript:resetButton()">
+				 重置
+			  </button>
+		   </span>
+		</div><!-- /input-group -->
+	 </div><!-- /.col-lg-6 -->
+
+	 <hr>
+
+	  <div class="text-center">
+		<button  id='change-button' class="btn btn-info" onclick="javascript:changeMethodState()"></button> 
+	  </div>
+	  <br>
+	<div  class="panel panel-default" id="static-div" style="">
+		<div class="" style="height: 20px">
+			<h5>系统消息</h5>
+			<hr>
+		</div>
+	 <div id="message" style="height:200px;overflow:hidden;">
+
+	 </div>
+	</div>
   </div>
 
 
